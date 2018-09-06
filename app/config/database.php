@@ -2,10 +2,10 @@
 
 return [
   'driver'    => 'mysql',
-  'host'      => '192.168.33.10',
+  'host'      => 'files_mysql-db_1',
   'database'  => 'auth',
-  'username'  => 'homestead',
-  'password'  => 'secret',
+  'username'  => 'root',
+  'password'  => '123456',
   'charset'   => 'utf8',
   'collation' => 'utf8_general_ci',
   'prefix'    => ''

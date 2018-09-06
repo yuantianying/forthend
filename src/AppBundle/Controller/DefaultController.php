@@ -10,12 +10,6 @@ class DefaultController
 {
     public function indexAction(Request $request)
     {
-    	$user = new User();
-		$user->name = 'seven';
-		$user->email = 'seven@to8to.com';
-		$user->is_admin = 0;
-		$user->status = 1;
-		$user->save();
         return new Response("<h1>Hello world!</h1>");
     }
 }
