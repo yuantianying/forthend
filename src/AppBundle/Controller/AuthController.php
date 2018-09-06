@@ -9,22 +9,22 @@ use AuthorityControl\Service\RoleService;
 
 class AuthController
 {
-	/**
-	 * 获取角色列表
-	 * @param  Request $request [description]
-	 * @return [type]           [description]
-	 */
+    /**
+     * 获取角色列表
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     public function roleListAction(Request $request)
     {
-    	//TODO:分页查询
-    	try {
-    		$roleService = new RoleService();
-	    	$roles = $roleService->getRoleList();
+        //TODO:分页查询
+        try {
+            $roleService = new RoleService();
+            $roles = $roleService->getRoleList();
             $response = ['code'=>1,'data'=>$roles];
-	    	
-    	} catch (\Exception $e) {
+            
+        } catch (\Exception $e) {
             $response = ['code'=>0,'msg'=>$e->geeMessage()];
-    	}
+        }
         return new JsonResponse($response);
     }
 
@@ -80,7 +80,83 @@ class AuthController
         } catch (\Exception $e) {
             $response = ['code'=>-1,'msg'=>$e->getMessage()];
         }
-    	return new JsonResponse($response);
+        return new JsonResponse($response);
+    }
+
+    /**
+     * 创建用户
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function createUserAction(Request $request)
+    {
+        try {
+            $name    = $request->request->get('name');
+            $email   = $request->request->get('email');
+            $isAdmin = $request->request->get('is_admin');
+            $userService = new UserService();
+            $res = $userService->createUser($name,$email,$isAdmin);
+            $response = $res ? ['code'=>1,'msg'=>'success'] : ['code'=>0,'msg'=>'fail'];
+        } catch (\Exception $e) {
+            $response = ['code'=>-1,'msg'=>$e->getMessage()];
+        }
+        return new JsonResponse($response);
+    }
+
+    /**
+     * 获取用户列表
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function userListAction(Request $request)
+    {
+        //TODO:分页查询
+        try {
+            $userService = new UserService();
+            $users = $userService->getUserList();
+            $response = ['code'=>1,'data'=>$users];
+        } catch (\Exception $e) {
+            $response = ['code'=>0,'msg'=>$e->geeMessage()];
+        }
+        return new JsonResponse($response);
+    }
+
+    /**
+     * 根据ID删除用户
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function deleteUserAction(Request $request)
+    {
+        try {
+            $id = $request->request->get('id');
+            $userService = new UserService();
+            $res = $userService->deleteUser($id);
+            $response = $res ? ['code'=>1,'msg'=>'success'] : ['code'=>0,'msg'=>'fail'];
+        } catch (\Exception $e) {
+            $response = ['code'=>-1,'msg'=>$e->getMessage()];
+        }
+        return new JsonResponse($response);
+    }
+
+    /**
+     * 更新用户信息
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function updateUserAction(Request $request)
+    {
+        try {
+            $id      = $request->request->get('id');
+            $name    = $request->request->get('name');
+            $email   = $request->request->get('email');
+            $userService = new UserService();
+            $res = $userService->updateUser($id,$name,$email);
+            $response = $res ? ['code'=>1,'msg'=>'success'] : ['code'=>0,'msg'=>'fail'];
+        } catch (\Exception $e) {
+            $response = ['code'=>-1,'msg'=>$e->getMessage()];
+        }
+        return new JsonResponse($response);
     }
 
 }

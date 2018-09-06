@@ -26,4 +26,16 @@ $collection->add('auth_delete_role', new Route('/auth/deleterole', array(
 $collection->add('auth_role_list', new Route('/auth/rolelist', array(
     '_controller' => 'AppBundle\\Controller\\AuthController::roleListAction',
 )));
+$collection->add('auth_create_user', new Route('/auth/createuser', array(
+    '_controller' => 'AppBundle\\Controller\\AuthController::createUserAction',
+)));
+$collection->add('auth_user_list', new Route('/auth/userlist', array(
+    '_controller' => 'AppBundle\\Controller\\AuthController::userListAction',
+)));
+$collection->add('auth_delete_user', new Route('/auth/deleteuser', array(
+    '_controller' => 'AppBundle\\Controller\\AuthController::deleteUserAction',
+)));
+$collection->add('auth_update_user', new Route('/auth/updateuser', array(
+    '_controller' => 'AppBundle\\Controller\\AuthController::updateUserAction',
+)));
 return $collection;

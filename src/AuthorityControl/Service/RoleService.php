@@ -19,8 +19,8 @@ class RoleService
 
 	public function createRole($name)
 	{
-		$roles = Role::where('name', '=', $name)->take(1)->get();
-		if (!isset($roles[0])) {
+		$roles = Role::where('name', '=', $name)->count();
+		if ($roles == 0) {
 			$role = $this->roleModel;
 			$role->name = $name;
 			return $role->save();
