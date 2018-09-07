@@ -49,6 +49,5 @@ class RoleService
 		}else{
 			throw new \Exception("无效的角色ID，无法找到该角色", 1);
 		}
-    	
 	}
 }

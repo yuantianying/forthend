@@ -6,25 +6,28 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AuthorityControl\Service\UserService;
 use AuthorityControl\Service\RoleService;
+use AuthorityControl\Service\AccessService;
+use AuthorityControl\Service\UserRoleService;
+use AuthorityControl\Service\RoleAccessService;
 
 class AuthController
 {
-    /**
-     * 获取角色列表
-     * @param  Request $request [description]
-     * @return [type]           [description]
-     */
+	/**
+	 * 获取角色列表
+	 * @param  Request $request [description]
+	 * @return [type]           [description]
+	 */
     public function roleListAction(Request $request)
     {
-        //TODO:分页查询
-        try {
-            $roleService = new RoleService();
-            $roles = $roleService->getRoleList();
+    	//TODO:分页查询
+    	try {
+    		$roleService = new RoleService();
+	    	$roles = $roleService->getRoleList();
             $response = ['code'=>1,'data'=>$roles];
-            
-        } catch (\Exception $e) {
+	    	
+    	} catch (\Exception $e) {
             $response = ['code'=>0,'msg'=>$e->geeMessage()];
-        }
+    	}
         return new JsonResponse($response);
     }
 
@@ -80,7 +83,7 @@ class AuthController
         } catch (\Exception $e) {
             $response = ['code'=>-1,'msg'=>$e->getMessage()];
         }
-        return new JsonResponse($response);
+    	return new JsonResponse($response);
     }
 
     /**
@@ -159,4 +162,141 @@ class AuthController
         return new JsonResponse($response);
     }
 
+    /**
+     * 获取权限列表
+     * @param Request $request [description]
+     */
+    public function AccessListAction(Request $request)
+    {
+        //TODO:分页查询
+        try {
+            $accessService = new AccessService();
+            $access = $accessService->getAccessList();
+            $response = ['code'=>1,'data'=>$access];
+        } catch (\Exception $e) {
+            $response = ['code'=>0,'msg'=>$e->geeMessage()];
+        }
+        return new JsonResponse($response);
+    }
+
+    /**
+     * 创建权限
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function createAccessAction(Request $request)
+    {
+        try {
+            $title  = $request->request->get('title');
+            $urls   = $request->request->get('urls');
+            $accessService = new AccessService();
+            $res = $accessService->createAccess($title,$urls);
+            $response = $res ? ['code'=>1,'msg'=>'success'] : ['code'=>0,'msg'=>'fail'];
+        } catch (\Exception $e) {
+            $response = ['code'=>-1,'msg'=>$e->getMessage()];
+        }
+        return new JsonResponse($response);
+    }
+
+    /**
+     * 根据ID删除权限
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function deleteAccessAction(Request $request)
+    {
+        try {
+            $id = $request->request->get('id');
+            $accessService = new AccessService();
+            $res = $accessService->deleteAccess($id);
+            $response = $res ? ['code'=>1,'msg'=>'success'] : ['code'=>0,'msg'=>'fail'];
+        } catch (\Exception $e) {
+            $response = ['code'=>-1,'msg'=>$e->getMessage()];
+        }
+        return new JsonResponse($response);
+    }
+
+    /**
+     * 更新权限信息
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function updateAccessAction(Request $request)
+    {
+        try {
+            $id     = $request->request->get('id');
+            $title  = $request->request->get('title');
+            $urls   = $request->request->get('urls');
+            $accessService = new AccessService();
+            $res = $accessService->updateAccess($id,$title,$urls);
+            $response = $res ? ['code'=>1,'msg'=>'success'] : ['code'=>0,'msg'=>'fail'];
+        } catch (\Exception $e) {
+            $response = ['code'=>-1,'msg'=>$e->getMessage()];
+        }
+        return new JsonResponse($response);
+    }
+
+    /**
+     * 给角色分配权限
+     * @return [type] [description]
+     */
+    public function assignAccessToRoleAction(Request $request)
+    {
+        try {
+            $roleId = $request->request->get('role_id');
+            $accessIds = $request->request->get('access_ids');
+            $accessIds = json_decode($accessIds,true);
+            if (!empty($accessIds) && $roleId) {
+                $roleAccessService = new RoleAccessService();
+                $roleAccessService->assignAccessToRole($roleId,$accessIds);
+                $response = ['code'=>1,'msg'=>'success'];   
+            }else{
+                $response = ['code'=>0,'msg'=>'参数不能为空'];
+            }
+        } catch (\Exception $e) {
+            $response = ['code'=>-1,'msg'=>$e->getMessage()];
+        }
+        return new JsonResponse($response);
+    }
+
+    /**
+     * 根据角色Id查询权限
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function roleAccessListAction(Request $request)
+    {
+        try {
+            $roleId = intval($request->query->get('role_id'));
+            $roleAccessService = new RoleAccessService();
+            $accessList = $roleAccessService->getRoleAccessList($roleId);
+            $response = ['code'=>1,'data'=>$accessList];
+        } catch (\Exception $e) {
+            $response = ['code'=>-1,'msg'=>$e->getMessage()];
+        }
+        return new JsonResponse($response);
+    }
+
+    /**
+     * 禁用角色拥有的权限
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function deleteRoleAccessAction(Request $request)
+    {
+        try {
+            $roleAccessIds = $request->request->get('role_access_ids');
+            $roleAccessIds = json_decode($roleAccessIds,true);
+            if (empty($roleAccessIds)) {
+                $response = ['code'=>0,'msg'=>'参数不能为空'];
+            }else{
+                $roleAccessService = new RoleAccessService();
+                $roleAccessService->deleteRoleAccess($roleAccessIds);
+                $response = ['code'=>1,'data'=>'success'];
+            }
+        } catch (\Exception $e) {
+            $response = ['code'=>-1,'msg'=>$e->getMessage()];
+        }
+        return new JsonResponse($response);
+    }
 }
