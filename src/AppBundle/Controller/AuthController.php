@@ -299,4 +299,68 @@ class AuthController
         }
         return new JsonResponse($response);
     }
+
+    /**
+     * 给用户分配角色
+     * @return [type] [description]
+     */
+    public function assignRoleToUserAction(Request $request)
+    {
+        try {
+            $userId = $request->request->get('uid');
+            $roleIds = $request->request->get('role_ids');
+            $roleIds = json_decode($roleIds,true);
+            if (!empty($roleIds) && $userId) {
+                $userRoleService = new UserRoleService();
+                $userRoleService->assignRoleToUser($userId,$roleIds);
+                $response = ['code'=>1,'msg'=>'success'];   
+            }else{
+                $response = ['code'=>0,'msg'=>'参数不能为空'];
+            }
+        } catch (\Exception $e) {
+            $response = ['code'=>-1,'msg'=>$e->getMessage()];
+        }
+        return new JsonResponse($response);
+    }
+
+    /**
+     * 根据用户Id查询用户拥有的角色列表
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function userRoleListAction(Request $request)
+    {
+        try {
+            $userId = intval($request->query->get('uid'));
+            $userRoleService = new UserRoleService();
+            $roleList = $userRoleService->getUserRoleList($userId);
+            $response = ['code'=>1,'data'=>$roleList];
+        } catch (\Exception $e) {
+            $response = ['code'=>-1,'msg'=>$e->getMessage()];
+        }
+        return new JsonResponse($response);
+    }
+
+    /**
+     * 禁用用户拥有的角色
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function deleteUserRoleAction(Request $request)
+    {
+        try {
+            $userRoleIds = $request->request->get('user_role_ids');
+            $userRoleIds = json_decode($userRoleIds,true);
+            if (empty($userRoleIds)) {
+                $response = ['code'=>0,'msg'=>'参数不能为空'];
+            }else{
+                $userRoleService = new UserRoleService();
+                $userRoleService->deleteUserRole($userRoleIds);
+                $response = ['code'=>1,'data'=>'success'];
+            }
+        } catch (\Exception $e) {
+            $response = ['code'=>-1,'msg'=>$e->getMessage()];
+        }
+        return new JsonResponse($response);
+    }
 }
