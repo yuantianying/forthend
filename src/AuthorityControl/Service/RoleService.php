@@ -2,6 +2,8 @@
 namespace AuthorityControl\Service;
 
 use AuthorityControl\Model\Role;
+use AuthorityControl\Model\UserRole;
+use AuthorityControl\Model\RoleAccess;
 
 class RoleService
 {
@@ -45,9 +47,17 @@ class RoleService
 	{
 		$role = Role::find($roleId);
 		if ($role) {
+			//同步删除所有的用户角色关系以及权限角色关系
+			UserRole::where('role_id', '=', $roleId)->delete();
+			RoleAccess::where('role_id', '=', $roleId)->delete();
 			return $role->delete();
 		}else{
 			throw new \Exception("无效的角色ID，无法找到该角色", 1);
 		}
+	}
+
+	public function getRoleAccessList($roleId)
+	{
+		return Role::find($roleId)->access;
 	}
 }

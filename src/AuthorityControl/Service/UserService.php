@@ -2,6 +2,7 @@
 namespace AuthorityControl\Service;
 
 use AuthorityControl\Model\User;
+use AuthorityControl\Model\UserRole;
 
 class UserService
 {
@@ -28,6 +29,8 @@ class UserService
 	{
 		$user = User::find($userId);
 		if ($user) {
+			//同步删除所有的用户角色关系
+			UserRole::where('uid', '=', $userId)->delete();
 			return $user->delete();
 		}else{
 			throw new \Exception("无效的用户ID，无法删除该用户", 1);
@@ -44,5 +47,10 @@ class UserService
 		}else{
 			throw new \Exception("无效的用户ID，无法找到该用户", 1);
 		}
+	}
+
+	public function getUserRoleList($uid)
+	{
+		return User::find($uid)->roles;
 	}
 }

@@ -26,7 +26,7 @@ class AuthController
             $response = ['code'=>1,'data'=>$roles];
 	    	
     	} catch (\Exception $e) {
-            $response = ['code'=>0,'msg'=>$e->geeMessage()];
+            $response = ['code'=>0,'msg'=>$e->getMessage()];
     	}
         return new JsonResponse($response);
     }
@@ -119,7 +119,7 @@ class AuthController
             $users = $userService->getUserList();
             $response = ['code'=>1,'data'=>$users];
         } catch (\Exception $e) {
-            $response = ['code'=>0,'msg'=>$e->geeMessage()];
+            $response = ['code'=>0,'msg'=>$e->getMessage()];
         }
         return new JsonResponse($response);
     }
@@ -174,7 +174,7 @@ class AuthController
             $access = $accessService->getAccessList();
             $response = ['code'=>1,'data'=>$access];
         } catch (\Exception $e) {
-            $response = ['code'=>0,'msg'=>$e->geeMessage()];
+            $response = ['code'=>0,'msg'=>$e->getMessage()];
         }
         return new JsonResponse($response);
     }
@@ -268,8 +268,8 @@ class AuthController
     {
         try {
             $roleId = intval($request->query->get('role_id'));
-            $roleAccessService = new RoleAccessService();
-            $accessList = $roleAccessService->getRoleAccessList($roleId);
+            $roleService = new RoleService();
+            $accessList = $roleService->getRoleAccessList($roleId);
             $response = ['code'=>1,'data'=>$accessList];
         } catch (\Exception $e) {
             $response = ['code'=>-1,'msg'=>$e->getMessage()];
@@ -332,8 +332,8 @@ class AuthController
     {
         try {
             $userId = intval($request->query->get('uid'));
-            $userRoleService = new UserRoleService();
-            $roleList = $userRoleService->getUserRoleList($userId);
+            $userService = new UserService();
+            $roleList = $userService->getUserRoleList($userId);
             $response = ['code'=>1,'data'=>$roleList];
         } catch (\Exception $e) {
             $response = ['code'=>-1,'msg'=>$e->getMessage()];

@@ -40,10 +40,10 @@ class RoleAccessService
 	 * @param  [type] $roleId [description]
 	 * @return [type]         [description]
 	 */
-	public function getRoleAccessList($roleId)
-	{
-		return RoleAccess::where('role_id', '=', $roleId)->get();
-	}
+	// public function getRoleAccessList($roleId)
+	// {
+	// 	return RoleAccess::where('role_id', '=', $roleId)->get();
+	// }
 
 	/**
 	 * 取消角色拥有的权限

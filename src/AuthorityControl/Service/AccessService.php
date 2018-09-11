@@ -2,6 +2,7 @@
 namespace AuthorityControl\Service;
 
 use AuthorityControl\Model\Access;
+use AuthorityControl\Model\Role;
 
 class AccessService
 {
@@ -46,6 +47,8 @@ class AccessService
 	{
 		$access = Access::find($accessId);
 		if ($access) {
+			//同步删除所有角色权限关系
+			RoleAccess::where('access_id', '=', $accessId)->delete();
 			return $access->delete();
 		}else{
 			throw new \Exception("无效的权限ID，无法找到该权限", 1);

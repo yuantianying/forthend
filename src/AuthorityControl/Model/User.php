@@ -17,4 +17,12 @@ class User extends Model
      * @var bool
      */
     public $timestamps = true;
+
+    /*
+     * 定义和角色的关联关系
+     */
+    public function roles()
+    {
+        return $this->belongsToMany('AuthorityControl\Model\Role', 'user_role', 'uid', 'role_id');
+    }
 }

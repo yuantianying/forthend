@@ -17,4 +17,12 @@ class Access extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * 定义和角色的关系
+     */
+    public function roles()
+    {
+        return $this->belongsToMany('AuthorityControl\Model\RoleAccess', 'role_access', 'role_id', 'access_id');
+    }
 }

@@ -41,10 +41,10 @@ class UserRoleService
 	 * @param  int $userId 用户id
 	 * @return          
 	 */
-	public function getUserRoleList($userId)
-	{
-		return UserRole::where('uid', '=', $userId)->get();
-	}
+	// public function getUserRoleList($userId)
+	// {
+	// 	return UserRole::where('uid', '=', $userId)->get();
+	// }
 
 	/**
 	 * 删除用户的角色
