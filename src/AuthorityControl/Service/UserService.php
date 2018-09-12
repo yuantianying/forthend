@@ -2,6 +2,7 @@
 namespace AuthorityControl\Service;
 
 use AuthorityControl\Model\User;
+use AuthorityControl\Model\Role;
 use AuthorityControl\Model\UserRole;
 
 class UserService
@@ -52,5 +53,37 @@ class UserService
 	public function getUserRoleList($uid)
 	{
 		return User::find($uid)->roles;
+	}
+
+	/**
+	 * 查询用户拥有的权限列表
+	 * @return [type] [description]
+	 */
+	public function getUserAccessList($uid)
+	{
+		$userAccessList = [];
+		$roleList = User::find($uid)->roles;
+		foreach ($roleList as $role) {
+			$accessList[] = Role::find($role['id'])->access;
+		}
+		if (!empty($accessList)) {
+			$i = 0;
+			foreach ($accessList as $key => $value) {
+				foreach ($value as $k => $v) {
+					if ($v['status'] == 1) {
+						$userAccessList[$i]['urls'] = $v['urls'];
+						$userAccessList[$i]['id'] = $v['id'];
+						$userAccessList[$i]['title'] = $v['title'];
+						$i++;
+					}
+				}
+			}
+		}
+		return $userAccessList;
+	}
+
+	public function getUserInfo($uid)
+	{
+		return User::find($uid);
 	}
 }

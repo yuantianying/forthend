@@ -28,10 +28,13 @@ class UserRoleService
 			if (!$role) {
 				throw new \Exception("无效的角色Id:{$roleId}", 1);
 			}else{
-				$userRoleModel = new UserRole();
-				$userRoleModel->uid = $userId;
-				$userRoleModel->role_id = $roleId;
-				$userRoleModel->save();
+				$userroles = UserRole::whereRaw("uid = '{$userId}' and role_id = '{$roleId}'")->count();
+				if (!$userroles) {
+					$userRoleModel = new UserRole();
+					$userRoleModel->uid = $userId;
+					$userRoleModel->role_id = $roleId;
+					$userRoleModel->save();	
+				}
 			}
 		}
 	}

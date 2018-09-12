@@ -27,10 +27,13 @@ class RoleAccessService
 			if (!$access) {
 				throw new \Exception("无效的权限Id:{$accessId}，无法找到该权限", 1);
 			}else{
-				$roleAccessModel = new RoleAccess();
-				$roleAccessModel->role_id = $roleId;
-				$roleAccessModel->access_id = $accessId;
-				$roleAccessModel->save();
+				$roleaccesses = RoleAccess::whereRaw("role_id = '{$roleId}' and access_id = '{$accessId}'")->count();
+				if (!$roleaccesses) {
+					$roleAccessModel = new RoleAccess();
+					$roleAccessModel->role_id = $roleId;
+					$roleAccessModel->access_id = $accessId;
+					$roleAccessModel->save();	
+				}
 			}
 		}
 	}
