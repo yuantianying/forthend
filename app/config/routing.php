@@ -65,4 +65,8 @@ $collection->add('auth_user_role_list', new Route('/auth/user/rolelist', array(
 $collection->add('auth_user_delete_role', new Route('/auth/user/deleterole', array(
     '_controller' => 'AppBundle\\Controller\\AuthController::deleteUserRoleAction',
 )));
+$collection->add('auth_user_access_list_role', new Route('/auth/user/accesslist', array(
+    '_controller' => 'AppBundle\\Controller\\AuthController::getUserAccessListAction',
+)));
+
 return $collection;

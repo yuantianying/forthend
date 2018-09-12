@@ -363,4 +363,23 @@ class AuthController
         }
         return new JsonResponse($response);
     }
+
+
+    /**
+     * 获取用户拥有的权限列表
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function getUserAccessListAction(Request $request)
+    {
+        try {
+            $userId = intval($request->query->get('uid'));
+            $userService = new UserService();
+            $accessList = $userService->getUserAccessList($userId);
+            $response = ['code'=>1,'data'=>$accessList];
+        } catch (\Exception $e) {
+            $response = ['code'=>-1,'msg'=>$e->getMessage()];
+        }
+        return new JsonResponse($response);
+    }
 }
