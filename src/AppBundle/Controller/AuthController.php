@@ -108,8 +108,8 @@ class AuthController
 
     /**
      * 获取用户列表
-     * @param  Request $request [description]
-     * @return [type]           [description]
+     * @param Request $request
+     * @return JsonResponse
      */
     public function userListAction(Request $request)
     {
