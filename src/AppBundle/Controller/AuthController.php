@@ -88,8 +88,8 @@ class AuthController
 
     /**
      * 创建用户
-     * @param  Request $request [description]
-     * @return [type]           [description]
+     * @param Request $request
+     * @return JsonResponse
      */
     public function createUserAction(Request $request)
     {
